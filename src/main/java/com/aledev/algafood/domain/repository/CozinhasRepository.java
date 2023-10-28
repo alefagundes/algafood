@@ -13,6 +13,11 @@ public interface CozinhasRepository extends JpaRepository<Cozinha, Long> {
 
     //findBy -> eh um prefixo utiizado e aceito pelo JpaRepository no qual eh utilizado para fazer buscas por registros no qual a condicao
     //esteja atrelada ao nome da propriedade da sua entidade.
-    List<Cozinha> findByNome(String nome);
+    //containing eh como so like do jpa referindo-se a propriedade da entidade ao qual sera feita a busca
+    List<Cozinha> findByNomeContaining(String nome);
+    
+    Boolean existsByNomeContaining(String nome);
+
+    Integer countByNomeContaining(String nome);
     
 }
