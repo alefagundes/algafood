@@ -16,6 +16,7 @@ import com.aledev.algafood.domain.model.Cozinha;
 import com.aledev.algafood.domain.model.Restaurante;
 import com.aledev.algafood.domain.repository.CozinhasRepository;
 import com.aledev.algafood.domain.repository.RestaurantRepository;
+import com.aledev.algafood.infrastructure.repository.RestaurantRepositoryImpl;
 
 @RestController
 @RequestMapping("/teste")
@@ -37,9 +38,14 @@ public class TesteController {
         return ResponseEntity.ok().body(restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal));
     }
 
-    @GetMapping(value="/restaurante/nome-id")
+    /* @GetMapping(value="/restaurante/nome-id")
     public ResponseEntity<List<Restaurante>> restauranteByNomeAndCozinhaId(@RequestParam String nome, @RequestParam Long cozinhaId) {
         return ResponseEntity.ok().body(restauranteRepository.findByNomeContainingAndCozinhaId(nome, cozinhaId));
+    } */
+
+    @GetMapping(value="/restaurante/nome-id")
+    public ResponseEntity<List<Restaurante>> restauranteByNomeAndCozinhaId(@RequestParam String nome, @RequestParam Long cozinhaId) {
+        return ResponseEntity.ok().body(restauranteRepository.consultarPorNome(nome, cozinhaId));
     }
 
     @GetMapping("/restaurantes/first-name")
@@ -61,5 +67,11 @@ public class TesteController {
     ResponseEntity<Integer> counterNomeCozinhasContaining(@RequestParam("name") String nome){
         return ResponseEntity.status(HttpStatus.OK).body(cozinhasRepository.countByNomeContaining(nome));
     }
+
+    @GetMapping("/restaurante/nome-taxaEntre")
+    public ResponseEntity<List<Restaurante>> restaurantesPorNomeFrete(String nome, 
+			BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+		return ResponseEntity.ok(restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal));
+	}
 
 }
