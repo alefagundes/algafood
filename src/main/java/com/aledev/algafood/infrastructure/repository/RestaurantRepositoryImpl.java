@@ -3,19 +3,20 @@ package com.aledev.algafood.infrastructure.repository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.aledev.algafood.domain.model.Restaurante;
+import com.aledev.algafood.domain.repository.RestaurantRepository;
 import com.aledev.algafood.domain.repository.RestaurantRepositoryImplQueries;
+import com.aledev.algafood.infrastructure.repository.spec.RestauranteSpac;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 
 @Repository
 public class RestaurantRepositoryImpl implements RestaurantRepositoryImplQueries { //com o sufixo Impl com o exato nome do repositorio da classe que extende o repositorio
@@ -23,6 +24,9 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryImplQueries
 
     @PersistenceContext
     private EntityManager manager;
+	
+	@Autowired @Lazy //anotation to use if you have a dependence that depend her serf
+	private RestaurantRepository restauranteRepository;
 
     @Override
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
@@ -50,5 +54,9 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryImplQueries
 		var query = manager.createQuery(criteria);
 		return query.getResultList();
 	}
-    
+
+	@Override
+	public List<Restaurante> findComFreteGratis(String nome) {
+		return restauranteRepository.findAll(RestauranteSpac.comFreteGratis().and(RestauranteSpac.comNomeSemelhante(nome)));
+	}
 }

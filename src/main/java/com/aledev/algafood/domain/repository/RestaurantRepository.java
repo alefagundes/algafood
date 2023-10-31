@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.aledev.algafood.domain.model.Restaurante;
 
-@Repository
-public interface RestaurantRepository  extends JpaRepository<Restaurante, Long>, RestaurantRepositoryImplQueries{
+@Repository //perceba que agora nao erdamos mais de jparepository e sim de customrepository
+public interface RestaurantRepository extends CustomJpaRepository<Restaurante, Long>, RestaurantRepositoryImplQueries, JpaSpecificationExecutor<Restaurante>{
 
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 

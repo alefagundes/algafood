@@ -73,4 +73,19 @@ public class TesteController {
         return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
     }
 
+    @GetMapping("/restaurante/com-frete-gratis")
+    public List<Restaurante> restaurantesComFreteGratis(String nome) {
+       return restauranteRepository.findComFreteGratis(nome);
+    }
+
+    @GetMapping("/restaurantes/busca-primeiro")
+    ResponseEntity<Optional<Restaurante>> buscaPrimeiro(){
+        return ResponseEntity.ok(restauranteRepository.buscarPrimeiro());
+    }
+
+    @GetMapping("/cozinhas/busca-primeiro")
+    ResponseEntity<Optional<Cozinha>> buscaPrimeiroCozinhas(){
+        return ResponseEntity.ok(cozinhasRepository.buscarPrimeiro());
+    }
+
 }
