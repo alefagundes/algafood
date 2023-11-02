@@ -1,5 +1,9 @@
 package com.aledev.algafood.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -8,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,12 +32,8 @@ public class Cozinha {
     //@JsonProperty("titulo") //possivel definir como sera esse nome do campo no json response
 	private String nome;
 
-    public Cozinha() {
-    }
-
-    public Cozinha(String nome) {
-        this.nome = nome;
-    }
-
+	@JsonIgnore
+	@OneToMany(mappedBy = "cozinha")
+	private List<Restaurante> restaurante = new ArrayList<>();
 	
 }
