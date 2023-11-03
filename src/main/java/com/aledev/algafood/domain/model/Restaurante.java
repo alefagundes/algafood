@@ -9,8 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -42,7 +40,9 @@ public class Restaurante {
     @Column(nullable = false)
     private BigDecimal taxaFrete;
     
-    @ManyToOne
+    //@JsonIgnoreProperties("hibernateLazyInitializer")//faz com que ignore o carregamento das cozinhas ate que seja necessario, quando necessario executa a consulta
+    //@JsonIgnore
+    @ManyToOne //(fetch = FetchType.LAZY) //tudo que termina com one utiliza a estrategia eger loading e tudo que termina com many utiliza a estrategia leazy loading
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha; 
 
@@ -60,14 +60,13 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataAtualizacao;
     
+    //@JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name="restaurante_id"), 
+    inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
+    private List<FormaPagamento> formasPagamento = new ArrayList<>();
+    
     @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
-    
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name="restaurante_id"), 
-              inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
-    private List<FormaPagamento> formasPagamento = new ArrayList<>();
-    
 }

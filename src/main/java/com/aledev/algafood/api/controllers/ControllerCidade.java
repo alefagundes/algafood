@@ -36,7 +36,7 @@ public class ControllerCidade {
     public ResponseEntity<List<Cidade>> listar() {
         return ResponseEntity.status(HttpStatus.OK).body(cidadeRepository.findAll());
     }
-
+    
     @GetMapping("/{cidadeId}")
     public ResponseEntity<Cidade> getByid(@PathVariable("cidadeId") Long id){
         Optional<Cidade> cidade = cidadeRepository.findById(id);

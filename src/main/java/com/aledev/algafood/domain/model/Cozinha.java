@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,8 +26,8 @@ public class Cozinha {
 	private Long id;
     
     //@JsonIgnore eh possivel nao enviar o campo na response
-    @Column(nullable = false)
     //@JsonProperty("titulo") //possivel definir como sera esse nome do campo no json response
+    @Column(nullable = false)
 	private String nome;
 
 	@JsonIgnore
