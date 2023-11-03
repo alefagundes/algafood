@@ -37,12 +37,12 @@ public class TesteController {
         return ResponseEntity.ok().body(restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal));
     }
 
-    /* @GetMapping(value="/restaurante/nome-id")
+    /* @GetMapping("/restaurante/nome-id")
     public ResponseEntity<List<Restaurante>> restauranteByNomeAndCozinhaId(@RequestParam String nome, @RequestParam Long cozinhaId) {
         return ResponseEntity.ok().body(restauranteRepository.findByNomeContainingAndCozinhaId(nome, cozinhaId));
     } */
 
-    @GetMapping(value="/restaurante/nome-id")
+    @GetMapping("/restaurante/nome-id")
     public ResponseEntity<List<Restaurante>> restauranteByNomeAndCozinhaId(@RequestParam String nome, @RequestParam Long cozinhaId) {
         return ResponseEntity.ok().body(restauranteRepository.consultarPorNome(nome, cozinhaId));
     }
