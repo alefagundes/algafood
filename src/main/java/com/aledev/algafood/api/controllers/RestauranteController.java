@@ -44,47 +44,29 @@ public class RestauranteController {
 
     @GetMapping("/{restauranteId}")
     public ResponseEntity<Restaurante> getById(@PathVariable("restauranteId") Long id){
-        Optional<Restaurante> restaurante = restauranteRepository.findById(id);
-        if(restaurante.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(restaurante.get());
-        }
-        return ResponseEntity.notFound().build();
+        Restaurante restaurante = restauranteService.buscarOuFalhar(id);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurante);
+        
     }
 
     @PostMapping //? -> pype card, tipo coringa, diz que o metodo nesse caso vai retornar um response entity de alguma coisa.
     public ResponseEntity<?> salvar(@RequestBody Restaurante restaurante) {
-        try{
-            restaurante = restauranteService.salvar(restaurante);
-            return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-        }catch(EntidadeNaoEncontradaException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.salvar(restaurante));
     }
 
     
     @PutMapping("/{restauranteId}")
     public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
-        try{
-            Restaurante restauranteAtual = restauranteRepository.findById(id).orElse(null);
-            if(restauranteAtual != null){
-                BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-                restaurante = restauranteService.salvar(restauranteAtual);
-                return ResponseEntity.status(HttpStatus.OK).body(restauranteAtual);
-            }
-            return ResponseEntity.notFound().build();
-        }catch(EntidadeNaoEncontradaException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            Restaurante restauranteAtual = restauranteService.buscarOuFalhar(id);
+            BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+            return ResponseEntity.status(HttpStatus.OK).body(restauranteService.salvar(restauranteAtual));
     }
     
     @PatchMapping("/{restauranteId}")
     public ResponseEntity<?> atualizarParcial(@PathVariable("restauranteId") Long id, @RequestBody Map<String, Object> campos){
-       Optional<Restaurante> restauranteAtual = restauranteRepository.findById(id);
-       if(restauranteAtual.isEmpty()){
-            return ResponseEntity.notFound().build();
-       }
-       merge(campos, restauranteAtual.get());
-       return atualizar(id, restauranteAtual.get());
+       Restaurante restauranteAtual = restauranteService.buscarOuFalhar(id);
+       merge(campos, restauranteAtual);
+       return atualizar(id, restauranteAtual);
     }
 
     private Map<String, Object> merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {

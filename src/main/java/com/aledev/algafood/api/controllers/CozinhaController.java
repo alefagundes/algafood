@@ -54,13 +54,8 @@ public class CozinhaController {
     }  */
 
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> getById(@PathVariable("cozinhaId") Long id) {
-        Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
-        if(cozinha.isPresent()){ //metodo isPresent() para validar se ha um elemento capturado polo optinal
-            return ResponseEntity.ok(cozinha.get()); // esse get basicamente eh pq o optional eh um objteto complexo e se houver uma cozinha
-            //dentro do optional de cozinha ela pode ser acessada atraves do get pegando o objeto de cozinha.
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public Cozinha getById(@PathVariable("cozinhaId") Long id) {
+        return cozinhaService.buscarOuFalhar(id);
     }
 
     @PostMapping
@@ -70,29 +65,12 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Cozinha> atualizarCozinha(@PathVariable("cozinhaId") Long id, @RequestBody Cozinha cozinhaBody){
-        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(id);
-        if(cozinhaAtual.isPresent()){
-            BeanUtils.copyProperties(cozinhaBody, cozinhaAtual.get(), "id"); //copia as propriedades do primeiro objeto para o segundo
-            // objeto do metodo, o terceiro parametro da funcao e as propriedades que deven ser ignoradas.
-            return ResponseEntity.status(HttpStatus.OK).body(cozinhaService.salvar(cozinhaAtual.get()));
-        }
-        return ResponseEntity.notFound().build();
+        Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(id);
+        BeanUtils.copyProperties(cozinhaBody, cozinhaAtual, "id"); //copia as propriedades do primeiro objeto para o segundo
+        // objeto do metodo, o terceiro parametro da funcao e as propriedades que deven ser ignoradas.
+        return ResponseEntity.status(HttpStatus.OK).body(cozinhaService.salvar(cozinhaAtual));
     } 
-    
-    /* @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<?> remove(@PathVariable("cozinhaId") Long id){
-       try {
-           cozinhaService.remove(id);
-           return ResponseEntity.noContent().build();
-        }catch(EntidadeEmUsoException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-       
-        }catch(EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-        }
-    } */
 
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

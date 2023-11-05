@@ -14,6 +14,9 @@ import com.aledev.algafood.domain.repository.EstadoRepository;
 public class CadastroEstadoService {
 
     //no service a logica eh feita a nivel de classe o retorno e controller que utilizamos o retorno com entidade.
+
+    private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe estado cadastrado para o codigo %d";
+    private static final String MSG_ESTADO_EM_USO = "O estado de codigo %d nao pode ser excluido pois esta em uso.";
     
     @Autowired
     private EstadoRepository estadoRepository;
@@ -26,9 +29,14 @@ public class CadastroEstadoService {
        try{
         estadoRepository.deleteById(id);
        }catch(EmptyResultDataAccessException e){
-            throw new EntidadeNaoEncontradaException(String.format("Codigo existe estado cadastrado para o codigo %d", id));
+            throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id));
        }catch(DataIntegrityViolationException e){
-            throw new EntidadeEmUsoException(String.format("O estado de codigo %d nao pode ser excluido pois esta em uso.", id));
+            throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, id));
        }
+    }
+
+    public Estado buscarOuFalhar(Long id){
+        return estadoRepository.findById(id).orElseThrow(() -> 
+        new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_EM_USO, id)));
     }
 }
