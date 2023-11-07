@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.model.Cidade;
 import com.aledev.algafood.domain.repository.CidadeRepository;
 import com.aledev.algafood.domain.service.CadastroCidadeService;
@@ -49,7 +50,11 @@ public class ControllerCidade {
     public ResponseEntity<?> atualizar(@PathVariable("cidadeId") Long id, @RequestBody Cidade cidade){
         Cidade cidadeAtual = cidadeService.buscarOuFalhar(id);
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-        return ResponseEntity.ok(cidadeService.salvar(cidadeAtual));
+        try {
+            return ResponseEntity.ok(cidadeService.salvar(cidadeAtual));
+        }catch(EntidadeNaoEncontradaException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{cidadeId}")

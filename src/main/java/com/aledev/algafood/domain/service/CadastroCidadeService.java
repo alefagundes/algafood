@@ -14,8 +14,8 @@ import com.aledev.algafood.domain.repository.CidadeRepository;
 @Service
 public class CadastroCidadeService {
 
-    private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade de codigo %d nao encontrada.";
-    private static final String MSG_CIDADE_EM_USO = "Cidade de codigo %d nao pode ser excluida pois esta em uso.";
+    private static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de cidade com código %d";
+    private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
 
     @Autowired
     private CidadeRepository cidadeRepository;

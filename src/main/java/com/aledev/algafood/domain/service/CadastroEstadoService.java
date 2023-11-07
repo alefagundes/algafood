@@ -15,8 +15,8 @@ public class CadastroEstadoService {
 
     //no service a logica eh feita a nivel de classe o retorno e controller que utilizamos o retorno com entidade.
 
-    private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe estado cadastrado para o codigo %d";
-    private static final String MSG_ESTADO_EM_USO = "O estado de codigo %d nao pode ser excluido pois esta em uso.";
+    private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com código %d";
+    private static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removido, pois está em uso";
     
     @Autowired
     private EstadoRepository estadoRepository;
