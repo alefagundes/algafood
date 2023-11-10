@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aledev.algafood.domain.exceptions.CozinhaNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.NegocioException;
 import com.aledev.algafood.domain.model.Restaurante;
@@ -52,7 +53,7 @@ public class RestauranteController {
     public ResponseEntity<?> salvar(@RequestBody Restaurante restaurante) {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.salvar(restaurante));
-        }catch(EntidadeNaoEncontradaException e){
+        }catch(CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
     }
@@ -64,7 +65,7 @@ public class RestauranteController {
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
         try {
             return ResponseEntity.status(HttpStatus.OK).body(restauranteService.salvar(restauranteAtual));
-        }catch(EntidadeNaoEncontradaException e){
+        }catch(CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
     }
