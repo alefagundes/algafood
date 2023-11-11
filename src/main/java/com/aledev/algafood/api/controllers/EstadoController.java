@@ -1,7 +1,6 @@
 package com.aledev.algafood.api.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
-import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.model.Estado;
 import com.aledev.algafood.domain.repository.EstadoRepository;
 import com.aledev.algafood.domain.service.CadastroEstadoService;

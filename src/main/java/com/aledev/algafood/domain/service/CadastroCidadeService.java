@@ -2,12 +2,10 @@ package com.aledev.algafood.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.aledev.algafood.domain.exceptions.CidadeNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
-import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.model.Cidade;
 import com.aledev.algafood.domain.model.Estado;
 import com.aledev.algafood.domain.repository.CidadeRepository;
@@ -31,10 +29,11 @@ public class CadastroCidadeService {
 
     public void remove(Long id){
        try {
-        cidadeRepository.deleteById(id);
-       
-       }catch(EmptyResultDataAccessException e){
+        if(!cidadeRepository.existsById(id)){
             throw new CidadeNaoEncontradaException(id);
+        }
+        cidadeRepository.deleteById(id);
+        
        }catch(DataIntegrityViolationException e){
             throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, id));
        }
