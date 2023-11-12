@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.aledev.algafood.domain.exceptions.CozinhaNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
-import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.model.Cozinha;
 import com.aledev.algafood.domain.repository.CozinhasRepository;
 
