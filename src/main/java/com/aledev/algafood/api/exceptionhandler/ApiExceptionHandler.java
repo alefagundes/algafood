@@ -1,6 +1,5 @@
 package com.aledev.algafood.api.exceptionhandler;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -19,6 +18,7 @@ import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
 import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.NegocioException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 
 @ControllerAdvice //focamos os pontos de tratamento de exceptions de todo o projto atraves desse controlador
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -30,10 +30,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
         
         Problem problem = createProblemBuilder(status, problemType, e.getMessage()).build();
-        
-        /*   Problem problem = Problem.builder().status(status.value())
-        .type("https://aledev.api/entidade-nao-encontrada")
-        .title("Entidade nao encontrada").detail(detail).build(); */
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
 
@@ -45,7 +41,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if(rootCause instanceof InvalidFormatException){
             return handldeInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        }else if(rootCause instanceof PropertyBindingException){
+            return handlePropertyBindingExept((PropertyBindingException) rootCause, headers, status, request);
         }
+    
         HttpStatus statusBad = HttpStatus.BAD_REQUEST;
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
         String detail = "O corpo da requisição está inválido. Veridique o erro de sintaxe.";
@@ -55,10 +54,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, statusBad, request);
     }
     
+    private ResponseEntity<Object> handlePropertyBindingExept(PropertyBindingException rootCause, HttpHeaders headers,
+            HttpStatusCode status, WebRequest request) {
+        String path = rootCause.getPath().stream().map((key) -> key.getFieldName()).collect(Collectors.joining("."));
+        ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+        HttpStatus statusDefined = HttpStatus.BAD_REQUEST;
+
+        String detail = String.format("A propriedade '%s' nao existe corrija ou remova essa propriedade.", path);
+        Problem problem = createProblemBuilder(statusDefined, problemType, detail).build();
+        return handleExceptionInternal(rootCause, problem, headers, status, request);
+    }
+
     private ResponseEntity<Object> handldeInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, 
             HttpStatusCode status, WebRequest request) {
 
-        String path = ex.getPath().stream().map((item) -> item.getFieldName()).collect(Collectors.joining("."));
+        String path = ex.getPath().stream().map((key) -> key.getFieldName()).collect(Collectors.joining("."));
                 
         HttpStatus statusDefined = HttpStatus.BAD_REQUEST;
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;

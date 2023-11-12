@@ -24,6 +24,7 @@ import com.aledev.algafood.domain.exceptions.NegocioException;
 import com.aledev.algafood.domain.model.Restaurante;
 import com.aledev.algafood.domain.repository.RestaurantRepository;
 import com.aledev.algafood.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -83,8 +84,9 @@ public class RestauranteController {
 
     private Map<String, Object> merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
         ObjectMapper objectMapper = new ObjectMapper(); //classe reponsavel por seralizar objetos java em json e json em java
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
+
         Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
-        System.out.println(restauranteOrigem);
 
         dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
            //Refletion do spring eh o meio possivel de alterar objetos em tempo de execusao.
