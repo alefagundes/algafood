@@ -52,7 +52,6 @@ public class RestauranteController {
     public ResponseEntity<Restaurante> getById(@PathVariable("restauranteId") Long id){
         Restaurante restaurante = restauranteService.buscarOuFalhar(id);
         return ResponseEntity.status(HttpStatus.OK).body(restaurante);
-        
     }
 
     @PostMapping //? -> pype card, tipo coringa, diz que o metodo nesse caso vai retornar um response entity de alguma coisa.

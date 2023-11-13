@@ -4,9 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum ProblemType {
+    ERRO_DE_SISTEMA("/erro-de-sistema", "Erro inesperado"),
     PARAMETRO_INVALIDO("/parametro-invalido", "Parametro invalido"),
     MENSAGEM_INCOMPREENSIVEL("/mensagem-incompreensivel", "Mensagem incompreensivel"),
-    ENTIDADE_NAO_ENCONTRADA("/entidade-nao-encontrada", "Entidade nao encontrada"),
+    RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não encontrado"),
     ENTIDADE_EM_USO("/entidade-em-uso", "Entidade em uso"),
     ERRO_NEGOCIO("/erro-negocio", "Regra de negócio violada");
 
@@ -16,7 +17,5 @@ public enum ProblemType {
     ProblemType(String path, String title){
         this.title = title;
         this.uri = "http://aledev.com.br" + path;
-
-    
     }
 }
