@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice //focamos os pontos de tratamento de exceptions de todo o projto atraves desse controlador
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final String MSG_USER_ERROR = "Ocorreu um erro interno e insperado no sitema. Tente novamente e se o " + 
+    private static final String MSG_USER_ERROR = "Ocorreu um erro interno e insperado no sitema. Tente novamente e se o " +
     "problema persistir, entre em contato com o administrador do sistema.";
     
     @ExceptionHandler(EntidadeNaoEncontradaException.class) //defino um metodo capaz de substituir o stack trace de uma requisicao com erro, esse mapeamento ocorre para a exception que eh defina.
@@ -74,6 +75,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = String.format("O recurso '%s', que tentou acessar, e inexistente.", ex.getRequestURL());
         Problem problem = createProblemBuilder(status, problemType, detail).userMessage(MSG_USER_ERROR).build();
        
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    @Override
+    @Nullable
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+    HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+        String detail = "Um ou mais campos estao incorretos. Faça o preenchimento correto dos campos e tente novamente.";
+        Problem  problem = createProblemBuilder(status, problemType, detail).userMessage(detail).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 

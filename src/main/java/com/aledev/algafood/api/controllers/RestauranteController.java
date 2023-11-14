@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aledev.algafood.domain.exceptions.CozinhaNaoEncontradaException;
@@ -30,6 +30,7 @@ import com.aledev.algafood.domain.repository.RestaurantRepository;
 import com.aledev.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -55,7 +56,7 @@ public class RestauranteController {
     }
 
     @PostMapping //? -> pype card, tipo coringa, diz que o metodo nesse caso vai retornar um response entity de alguma coisa.
-    public ResponseEntity<?> salvar(@RequestBody Restaurante restaurante) {
+    public ResponseEntity<?> salvar(@RequestBody @Valid Restaurante restaurante) {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.salvar(restaurante));
         }catch(CozinhaNaoEncontradaException e){
