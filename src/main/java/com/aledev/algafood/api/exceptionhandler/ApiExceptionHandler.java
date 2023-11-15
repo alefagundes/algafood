@@ -1,10 +1,9 @@
 package com.aledev.algafood.api.exceptionhandler;
 
-import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
-import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
-import com.aledev.algafood.domain.exceptions.NegocioException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,8 +20,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
+
+import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
+import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
+import com.aledev.algafood.domain.exceptions.NegocioException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 
 
 @ControllerAdvice //focamos os pontos de tratamento de exceptions de todo o projto atraves desse controlador
@@ -84,7 +88,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
         String detail = "Um ou mais campos estao incorretos. Faça o preenchimento correto dos campos e tente novamente.";
-        Problem  problem = createProblemBuilder(status, problemType, detail).userMessage(detail).build();
+        BindingResult bindingResult = ex.getBindingResult();
+        List<Problem.Field> problemFiel = bindingResult.getFieldErrors().stream()
+                            .map((fieldError) -> Problem.Field.builder().name(fieldError.getField()).userMessage(fieldError.getDefaultMessage())
+                            .build()).collect(Collectors.toList());
+                            
+        Problem  problem = createProblemBuilder(status, problemType, detail).userMessage(detail).fields(problemFiel).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
