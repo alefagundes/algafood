@@ -3,6 +3,7 @@ package com.aledev.algafood.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.aledev.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,6 +23,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Cozinha {
 
+	@NotNull(groups = Groups.CadastroRestaurante.class)
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +31,7 @@ public class Cozinha {
     
     //@JsonIgnore eh possivel nao enviar o campo na response
     //@JsonProperty("titulo") //possivel definir como sera esse nome do campo no json response
+	@NotBlank
     @Column(nullable = false)
 	private String nome;
 

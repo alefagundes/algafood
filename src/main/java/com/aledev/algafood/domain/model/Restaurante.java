@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.aledev.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -21,8 +22,12 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -46,6 +51,9 @@ public class Restaurante {
     
     //@JsonIgnoreProperties("hibernateLazyInitializer")//faz com que ignore o carregamento das cozinhas ate que seja necessario, quando necessario executa a consulta
     //@JsonIgnore
+    @Valid //diz para o spring validar a propriedade e valida ate mesmo em cascata se for necessario
+    @ConvertGroup(from = Default.class, to =  Groups.CadastroRestaurante.class)
+    @NotNull
     @ManyToOne //(fetch = FetchType.LAZY) //tudo que termina com one utiliza a estrategia eger loading e tudo que termina com many utiliza a estrategia leazy loading
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha; 

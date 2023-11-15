@@ -20,6 +20,8 @@ import com.aledev.algafood.domain.model.Cozinha;
 import com.aledev.algafood.domain.repository.CozinhasRepository;
 import com.aledev.algafood.domain.service.CadastroCozinhaService;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -55,7 +57,7 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha salvar(@RequestBody Cozinha cozinha) {
+    public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
         return cozinhaService.salvar(cozinha);
     }
 
