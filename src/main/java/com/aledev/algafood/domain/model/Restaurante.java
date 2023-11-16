@@ -44,7 +44,8 @@ public class Restaurante {
     @NotBlank
     @Column(nullable = false)
     private String nome;
-    
+
+    @NotNull
     @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal taxaFrete;
@@ -52,7 +53,7 @@ public class Restaurante {
     //@JsonIgnoreProperties("hibernateLazyInitializer")//faz com que ignore o carregamento das cozinhas ate que seja necessario, quando necessario executa a consulta
     //@JsonIgnore
     @Valid //diz para o spring validar a propriedade e valida ate mesmo em cascata se for necessario
-    @ConvertGroup(from = Default.class, to =  Groups.CadastroRestaurante.class)
+    @ConvertGroup(from = Default.class, to =  Groups.CozinhaId.class)
     @NotNull
     @ManyToOne //(fetch = FetchType.LAZY) //tudo que termina com one utiliza a estrategia eger loading e tudo que termina com many utiliza a estrategia leazy loading
     @JoinColumn(name = "cozinha_id", nullable = false)

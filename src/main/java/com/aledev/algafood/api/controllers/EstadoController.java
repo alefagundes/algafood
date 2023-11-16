@@ -19,6 +19,8 @@ import com.aledev.algafood.domain.model.Estado;
 import com.aledev.algafood.domain.repository.EstadoRepository;
 import com.aledev.algafood.domain.service.CadastroEstadoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/estados")
 public class EstadoController {
@@ -41,12 +43,12 @@ public class EstadoController {
     }
 
     @PostMapping
-    public ResponseEntity<Estado> salvar(@RequestBody Estado estado){
+    public ResponseEntity<Estado> salvar(@RequestBody @Valid Estado estado){
         return ResponseEntity.status(HttpStatus.CREATED).body(estadoService.salvar(estado));
     }
 
     @PutMapping("/{estadoId}")
-	public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId, @RequestBody Estado estadoResquest) {
+	public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estadoResquest) {
 		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 			BeanUtils.copyProperties(estadoResquest, estadoAtual, "id");
 			//estadoAtual = estadoService.salvar(estadoAtual);

@@ -62,7 +62,7 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizarCozinha(@PathVariable("cozinhaId") Long id, @RequestBody Cozinha cozinhaBody){
+    public ResponseEntity<Cozinha> atualizarCozinha(@PathVariable("cozinhaId") Long id, @RequestBody @Valid Cozinha cozinhaBody){
         Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(id);
         BeanUtils.copyProperties(cozinhaBody, cozinhaAtual, "id"); //copia as propriedades do primeiro objeto para o segundo
         // objeto do metodo, o terceiro parametro da funcao e as propriedades que deven ser ignoradas.

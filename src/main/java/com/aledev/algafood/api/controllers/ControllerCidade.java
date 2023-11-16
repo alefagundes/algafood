@@ -22,6 +22,8 @@ import com.aledev.algafood.domain.model.Cidade;
 import com.aledev.algafood.domain.repository.CidadeRepository;
 import com.aledev.algafood.domain.service.CadastroCidadeService;
 
+import jakarta.validation.Valid;
+
 @RequestMapping("/cidades")
 @RestController
 public class ControllerCidade {
@@ -44,7 +46,7 @@ public class ControllerCidade {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody Cidade cidade) {
+    public ResponseEntity<?> salvar(@RequestBody @Valid Cidade cidade) {
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(cidadeService.salvar(cidade));
         }catch(EntidadeNaoEncontradaException e){
@@ -53,7 +55,7 @@ public class ControllerCidade {
     } 
 
     @PutMapping("/{cidadeId}")
-	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
 		Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		try {

@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aledev.algafood.Groups;
 import com.aledev.algafood.domain.exceptions.CozinhaNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.NegocioException;
@@ -68,7 +66,7 @@ public class RestauranteController {
 
     
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
+    public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @RequestBody @Valid Restaurante restaurante){
         Restaurante restauranteAtual = restauranteService.buscarOuFalhar(id);
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
         try {
