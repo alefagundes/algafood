@@ -46,7 +46,7 @@ public class Restaurante {
     private String nome;
 
     @NotNull
-    @PositiveOrZero
+    @PositiveOrZero(message = "{TaxaFrete.invalida}") //a chave passada entre parenteses deve estar atrelada ao bean validation ao qual se refere para ser possivel acessar a msg
     @Column(nullable = false)
     private BigDecimal taxaFrete;
     
