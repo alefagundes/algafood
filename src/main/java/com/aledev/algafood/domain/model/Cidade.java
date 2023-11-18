@@ -1,6 +1,6 @@
 package com.aledev.algafood.domain.model;
 
-import com.aledev.algafood.Groups;
+import com.aledev.algafood.core.validation.Groups;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

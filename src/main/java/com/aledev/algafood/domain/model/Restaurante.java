@@ -8,7 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.aledev.algafood.Groups;
+import com.aledev.algafood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -45,11 +45,12 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
+    //@PositiveOrZero(message = "{TaxaFrete.invalida}") //a chave passada entre parenteses deve estar atrelada ao bean validation ao qual se refere para ser possivel acessar a msg
     @NotNull
-    @PositiveOrZero(message = "{TaxaFrete.invalida}") //a chave passada entre parenteses deve estar atrelada ao bean validation ao qual se refere para ser possivel acessar a msg
+    @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal taxaFrete;
-    
+
     //@JsonIgnoreProperties("hibernateLazyInitializer")//faz com que ignore o carregamento das cozinhas ate que seja necessario, quando necessario executa a consulta
     //@JsonIgnore
     @Valid //diz para o spring validar a propriedade e valida ate mesmo em cascata se for necessario
@@ -78,7 +79,7 @@ public class Restaurante {
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name="restaurante_id"), 
     inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
     private List<FormaPagamento> formasPagamento = new ArrayList<>();
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
