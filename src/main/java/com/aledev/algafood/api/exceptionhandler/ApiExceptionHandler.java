@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.aledev.algafood.core.validation.ValidacaoException;
 import com.aledev.algafood.domain.exceptions.EntidadeEmUsoException;
 import com.aledev.algafood.domain.exceptions.EntidadeNaoEncontradaException;
 import com.aledev.algafood.domain.exceptions.NegocioException;
@@ -87,22 +89,38 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
        
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
-    @Override
-    @Nullable
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+    
+    protected ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult,
     HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
         String detail = "Um ou mais campos estao incorretos. Faça o preenchimento correto dos campos e tente novamente.";
-        BindingResult bindingResult = ex.getBindingResult();
-        List<Problem.Field> problemFiel = bindingResult.getFieldErrors().stream()
-                            .map((fieldError) -> {
-                                String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-                                return Problem.Field.builder().name(fieldError.getField()).userMessage(message)
+    
+        List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
+                            .map((objectError) -> {
+                                String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+                                String name = objectError.getObjectName();
+
+                                if(objectError instanceof FieldError){
+                                    name = ((FieldError)objectError).getField();
+                                }
+
+                                return Problem.Object.builder().name(name).userMessage(message)
                                         .build();
                             }).collect(Collectors.toList());
 
-        Problem  problem = createProblemBuilder(status, problemType, detail).userMessage(detail).fields(problemFiel).build();
+        Problem  problem = createProblemBuilder(status, problemType, detail).userMessage(detail).objects(problemObjects).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+    @ExceptionHandler({ ValidacaoException.class })
+    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBingResult(), new HttpHeaders(), HttpStatusCode.valueOf(400), request);
+    } 
+
+    @Nullable
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
     }
 
     @Override

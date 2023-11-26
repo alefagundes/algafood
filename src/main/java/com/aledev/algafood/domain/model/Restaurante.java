@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.groups.ConvertGroup;
 import jakarta.validation.groups.Default;
 import lombok.Data;
@@ -35,10 +36,10 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    //@PositiveOrZero(message = "{TaxaFrete.invalida}") //a chave passada entre parenteses deve estar atrelada ao bean validation ao qual se refere para ser possivel acessar a msg
-    @NotNull
     //@TaxaFrete
-    @Multiplo(numero= 5)
+    //@Multiplo(numero= 5)
+    @NotNull
+    @PositiveOrZero(message = "{TaxaFrete.invalida}") //a chave passada entre parenteses deve estar atrelada ao bean validation ao qual se refere para ser possivel acessar a msg
     @Column(nullable = false)
     private BigDecimal taxaFrete;
 
