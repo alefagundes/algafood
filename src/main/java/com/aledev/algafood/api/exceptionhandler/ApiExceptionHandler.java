@@ -111,6 +111,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Problem  problem = createProblemBuilder(status, problemType, detail).userMessage(detail).objects(problemObjects).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
+    
     @ExceptionHandler({ ValidacaoException.class })
     public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
         return handleValidationInternal(ex, ex.getBingResult(), new HttpHeaders(), HttpStatusCode.valueOf(400), request);
