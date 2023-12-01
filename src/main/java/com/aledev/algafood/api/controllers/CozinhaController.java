@@ -38,18 +38,6 @@ public class CozinhaController {
         return ResponseEntity.status(HttpStatus.OK).body(cozinhaRepository.findAll());
     }
 
-    /* @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{cozinhaId}") // caso nao queira fazer o bind dessa variavel para id, 
-    //basta definir a mesma com o mesmo nome no metodo.
-    public ResponseEntity<Cozinha> getById(@PathVariable("cozinhaId") Long id){
-        Cozinha cozinha = cozinhaRepository.getCozinhaById(id);
-        //return ResponseEntity.status(HttpStatus.OK).body(cozinha);
-        //return ResponseEntity.ok(cozinha);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, "http://api.algafood.local:8080/cozinhas");
-        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
-    }  */
-
     @GetMapping("/{cozinhaId}")
     public Cozinha getById(@PathVariable("cozinhaId") Long id) {
         return cozinhaService.buscarOuFalhar(id);
